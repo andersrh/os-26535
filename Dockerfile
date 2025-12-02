@@ -51,8 +51,6 @@ RUN setsebool -P domain_kernel_load_modules on
 COPY etc /etc
 COPY usr /usr
 
-RUN systemctl enable waydroid-choose-intel-gpu.service
-
 RUN cd /usr/bin && wget https://raw.githubusercontent.com/CachyOS/CachyOS-Settings/refs/heads/master/usr/bin/kerver && chmod +x kerver
 
 RUN rm -rf /tmp/* /var/* && mkdir -p /var/tmp && chmod -R 1777 /var/tmp && \
