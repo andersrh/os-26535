@@ -12,15 +12,9 @@ RUN /tmp/set_next_version.sh
 COPY repo/*.repo /etc/yum.repos.d/
 RUN dnf config-manager --add-repo=https://negativo17.org/repos/epel-nvidia.repo -y
 
-RUN dnf install -y $( \
-                                                                              dnf list --available kernel\* --disablerepo='*' --enablerepo=my-ostree-os-rhel-epel 2>/dev/null \
-                                                                              | grep 'andersdsrhcustom' \
-                                                                              | awk '{print $1 "-" $2}' \
-                                                                              | sort -V \
-                                                                              | tail -1 \
-                                                                              | sed 's/\.src//g' \
-                                                                              | sed 's/\.x86_64//g' \
-                                                                  )
+RUN dnf copr enable bieszczaders/kernel-cachyos -y
+
+RUN dnf install -y kernel-cachyos
 
 RUN dnf install --nogpgcheck -y https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm
 
@@ -29,7 +23,7 @@ RUN dnf install -y https://github.com/TheAssassin/AppImageLauncher/releases/down
 
 # Install Negativo17 Nvidia driver
 RUN dnf install -y dkms-nvidia nvidia-driver nvidia-persistenced opencl-filesystem libva-nvidia-driver kernel-devel-matched
-RUN dkms install nvidia/$(ls /usr/src/ | grep nvidia- | cut -d- -f2-) -k $(rpm -q --queryformat "%{VERSION}-%{RELEASE}.%{ARCH}\n" kernel)
+RUN dkms install nvidia/$(ls /usr/src/ | grep nvidia- | cut -d- -f2-) -k $(rpm -q --queryformat "%{VERSION}-%{RELEASE}.%{ARCH}\n" kernel-cachyos)
 
 # Remove plocate to avoid updatedb going crazy with scanning the file system once a day
 RUN dnf remove -y plocate
