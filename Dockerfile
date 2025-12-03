@@ -1,6 +1,9 @@
 FROM quay.io/almalinuxorg/atomic-desktop-kde:10
 ARG CACHEBUST=1
 
+ARG KERNEL=kernel-cachyos
+ENV KERNEL=${KERNEL}
+
 # Get list of kernels from my repo. If the list has been updated, then the image will be rebuilt. If it hasn't been updated, then caching of the previous build will be used.
 ADD "https://copr.fedorainfracloud.org/api_3/build/list?ownername=andersrh&projectname=my-ostree-os&packagename=kernel" /tmp/builds.txt
 
@@ -14,7 +17,9 @@ RUN dnf config-manager --add-repo=https://negativo17.org/repos/epel-nvidia.repo 
 
 RUN dnf copr enable bieszczaders/kernel-cachyos -y
 
-RUN dnf install -y kernel-cachyos
+RUN dnf install -y ${KERNEL} ${KERNEL}-devel-matched
+
+RUN dnf remove -y kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra kernel-tools kernel-tools-libs
 
 RUN dnf install --nogpgcheck -y https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm
 
