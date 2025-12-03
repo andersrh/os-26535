@@ -12,19 +12,12 @@ RUN /tmp/set_next_version.sh
 COPY repo/*.repo /etc/yum.repos.d/
 RUN dnf config-manager --add-repo=https://negativo17.org/repos/epel-nvidia.repo -y
 
-RUN dnf install -y $( \
-                                                                              dnf list --available kernel\* --disablerepo='*' --enablerepo=my-ostree-os-rhel-epel 2>/dev/null \
-                                                                              | grep 'andersdsrhcustom' \
-                                                                              | awk '{print $1 "-" $2}' \
-                                                                              | sort -V \
-                                                                              | tail -1 \
-                                                                              | sed 's/\.src//g' \
-                                                                              | sed 's/\.x86_64//g' \
-                                                                  )
+# This is necessary for the speakers and internal microphone
+RUN dnf install -y alsa-sof-firmware
 
 RUN dnf install --nogpgcheck -y https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm
 
-RUN dnf install -y fish distrobox nvtop intel-media-driver libva-intel-driver
+RUN dnf install -y fish distrobox nvtop intel-media-driver libva-intel-driver htop
 RUN dnf install -y https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/appimagelauncher-2.2.0-travis995.0f91801.x86_64.rpm
 
 # Install Negativo17 Nvidia driver
@@ -47,8 +40,6 @@ RUN rm -f /etc/chromium/chromium.conf
 
 # Add rule to SELinux allowing modules to be loaded into custom kernel
 RUN setsebool -P domain_kernel_load_modules on
-
-RUN dnf install -y alsa-sof-firmware
 
 COPY etc /etc
 COPY usr /usr
