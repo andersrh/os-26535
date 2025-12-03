@@ -48,6 +48,8 @@ RUN rm -f /etc/chromium/chromium.conf
 # Add rule to SELinux allowing modules to be loaded into custom kernel
 RUN setsebool -P domain_kernel_load_modules on
 
+RUN dnf install -y alsa-sof-firmware
+
 COPY etc /etc
 COPY usr /usr
 
