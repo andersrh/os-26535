@@ -35,6 +35,11 @@ RUN dnf swap libavcodec-free libavcodec-freeworld --allowerasing -y
 
 RUN dnf -y install gwenview haruna kalk okular
 RUN dnf -y install chromium firefox
+
+# replace noopenh264 with real openh264 files
+RUN rm -f /usr/lib64/libopenh264.so.2.4.1 /usr/lib64/libopenh264.so.7
+RUN rpm -Uvh --nodeps https://codecs.fedoraproject.org/openh264/42/x86_64/Packages/o/openh264-2.5.1-1.fc42.x86_64.rpm https://codecs.fedoraproject.org/openh264/42/x86_64/Packages/m/mozilla-openh264-2.5.1-1.fc42.x86_64.rpm
+
 # Delete default Chromium config so it can be replaced by my own
 RUN rm -f /etc/chromium/chromium.conf
 
