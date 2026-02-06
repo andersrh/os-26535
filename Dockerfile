@@ -29,6 +29,9 @@ RUN dnf install libheif-freeworld -y
 # Install proprietary codecs
 RUN dnf swap libavcodec-free libavcodec-freeworld --allowerasing -y
 
+# Install HPLIP for HP printer support
+RUN dnf install hplip -y
+
 RUN dnf -y install gwenview haruna kalk okular
 RUN dnf -y install chromium firefox
 
