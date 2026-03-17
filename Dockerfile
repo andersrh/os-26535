@@ -39,11 +39,16 @@ RUN dnf -y install chromium firefox
 RUN rm -f /usr/lib64/libopenh264.so.2.4.1 /usr/lib64/libopenh264.so.7
 RUN rpm -Uvh --nodeps https://codecs.fedoraproject.org/openh264/42/x86_64/Packages/o/openh264-2.5.1-1.fc42.x86_64.rpm https://codecs.fedoraproject.org/openh264/42/x86_64/Packages/m/mozilla-openh264-2.5.1-1.fc42.x86_64.rpm
 
+RUN dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+RUN dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
 # Delete default Chromium config so it can be replaced by my own
 RUN rm -f /etc/chromium/chromium.conf
 
 # Add rule to SELinux allowing modules to be loaded into custom kernel
 RUN setsebool -P domain_kernel_load_modules on
+
+RUN systemctl enable docker
 
 COPY etc /etc
 COPY usr /usr
@@ -51,4 +56,4 @@ COPY usr /usr
 RUN cd /usr/bin && wget https://raw.githubusercontent.com/CachyOS/CachyOS-Settings/refs/heads/master/usr/bin/kerver && chmod +x kerver
 
 RUN rm -rf /tmp/* /var/* && mkdir -p /var/tmp && chmod -R 1777 /var/tmp && \
-bootc container lint
+    bootc container lint
