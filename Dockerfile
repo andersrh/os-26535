@@ -13,6 +13,11 @@ RUN dnf install -y alsa-sof-firmware
 
 RUN dnf install --nogpgcheck -y https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm
 
+RUN dnf config-manager --add-repo https://copr.fedorainfracloud.org/coprs/andersrh/sonicDE/repo/rhel+epel-10/andersrh-sonicDE-rhel+epel-10.repo -y
+RUN dnf config-manager --add-repo https://copr.fedorainfracloud.org/coprs/g/xlibre/xlibre-xserver/repo/rhel+epel-10/group_xlibre-xlibre-xserver-rhel+epel-10.repo -y
+
+RUN dnf install sonic-workspace-x11 sonic-win sonic-interface-libraries sonic-workspace --allowerasing -y
+
 RUN dnf install -y fish distrobox nvtop intel-media-driver libva-intel-driver htop
 RUN dnf install -y https://github.com/TheAssassin/AppImageLauncher/releases/download/v2.2.0/appimagelauncher-2.2.0-travis995.0f91801.x86_64.rpm
 
