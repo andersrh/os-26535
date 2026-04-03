@@ -6,7 +6,7 @@ COPY bin/set_next_version.sh /tmp
 RUN /tmp/set_next_version.sh
 
 COPY repo/*.repo /etc/yum.repos.d/
-RUN dnf config-manager --add-repo=https://negativo17.org/repos/epel-nvidia.repo -y
+RUN dnf config-manager --add-repo=https://negativo17.org/repos/epel-nvidia-580.repo -y
 
 # This is necessary for the speakers and internal microphone
 RUN dnf install -y alsa-sof-firmware
